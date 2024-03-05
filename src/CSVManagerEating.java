@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 public class CSVManagerEating {
     private static List<String> ingredientsList = new ArrayList<>();
     private static List<String> mealsList = new ArrayList<>();

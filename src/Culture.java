@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+
 public class Culture extends JFrame {
     private JButton addMedium;
     private JTextField addMediumField;
