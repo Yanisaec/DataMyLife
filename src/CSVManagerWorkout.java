@@ -43,4 +43,124 @@ public class CSVManagerWorkout {
         }
         return data;
     }
+
+    public static String[] getAllElements(String Type) {
+        String[] choiceList = new String[0];
+        if (Type.equals("Workout")){
+            try (BufferedReader workouts = CSVManagerWorkout.openCSVFile(WORKOUTTYPES_CSV_PATH)) {
+                List<String> data = CSVManagerWorkout.readCSVFile(workouts);
+                choiceList = new String[data.size()] ;
+                for (int i = 0; i < data.size(); i++ ) {
+                    choiceList[i] = data.get(i);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Handle the exception appropriately (e.g., show an error message)
+            }
+        } else if (Type.equals("Exercise")) {
+            try (BufferedReader exercises = CSVManagerWorkout.openCSVFile(EXERCISES_CSV_PATH)) {
+                List<String> data = CSVManagerWorkout.readCSVFile(exercises);
+                choiceList = new String[data.size()] ;
+                for (int i = 0; i < data.size(); i++ ) {
+                    choiceList[i] = data.get(i);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Handle the exception appropriately (e.g., show an error message)
+            }
+        }
+        return choiceList;
+    }
+
+    public static boolean isAWorkout(String workoutToTest) {
+        try (BufferedReader workouts = CSVManagerWorkout.openCSVFile(WORKOUTTYPES_CSV_PATH)) {
+            List<String> data = CSVManagerWorkout.readCSVFile(workouts);
+            for (int i = 0; i < data.size(); i++ ) {
+                workoutTypesList.add(data.get(i));
+            }
+            return workoutTypesList.contains(workoutToTest);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public static boolean isAnExercise(String exerciseToTest) {
+        try (BufferedReader exercises = CSVManagerWorkout.openCSVFile(EXERCISES_CSV_PATH)) {
+            List<String> data = CSVManagerWorkout.readCSVFile(exercises);
+            for (int i = 0; i < data.size(); i++ ) {
+                exercisesList.add(data.get(i));
+            }
+            return exercisesList.contains(exerciseToTest);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static void addToWorkouts(String date, String workout, String exercise, String weight, String reps, String rest) throws CustomException{
+        String filePath = WORKOUTS_CSV_PATH;
+        if (!date.matches("\\d{8}")) {
+            throw new CustomException("The date isn't in the right format.");
+        }
+
+        if (!isAWorkout(workout)) {
+            throw new CustomException(workout + " is not a valid workout, first add it to the dictionnary.");
+        }
+
+        if (!isAnExercise(exercise)) {
+            throw new CustomException(exercise + " is not a valid exercise, first add it to the dictionnary.");
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            List<String> lines = new ArrayList<>();
+
+            // Read all existing lines from the file
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+
+            // Check if there is a line with the specified date
+            boolean dateExists = false;
+
+            for (int i = 0; i < lines.size(); i++) {
+                String existingLine = lines.get(i);
+                String[] parts = existingLine.split(";");
+                if (parts.length > 0 && parts[0].equals(date)) {
+                    if (!existingLine.contains("{" + exercise + ":" + weight + ":" + reps + ":" + rest +"}")) {
+                        // Line with the date already exists, append the new tuple
+                        lines.set(i, existingLine + ",{" + exercise + ":" + weight + ":" + reps + ":" + rest +"}");
+                        dateExists = true;
+                        break;
+                    }
+                }
+            }
+
+            // If the date doesn't exist, create a new line
+            if (!dateExists) {
+                String newLine = date + ";" + workout +  ";{" + exercise + ":" + weight + ":" + reps + ":" + rest +"}";
+                lines.add(newLine);
+            }
+
+            // Write the updated lines back to the file
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                for (String updatedLine : lines) {
+                    writer.write(updatedLine);
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Handle the exception appropriately (e.g., show an error message)
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately (e.g., show an error message)
+        }
+    }
+
+    public static class CustomException extends Exception {
+        public CustomException(String message) {
+            super(message);
+        }
+    }
 }

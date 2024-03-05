@@ -175,9 +175,9 @@ public class CSVManagerEating {
                 if (parts.length > 0 && parts[0].equals(date)) {
                     if (!existingLine.contains("{" + meal + ":" + ingredient + "}")) {
                         // Line with the date already exists, append the new tuple
-                    lines.set(i, existingLine + ",{" + meal + ":" + ingredient + "}");
-                    dateExists = true;
-                    break;
+                        lines.set(i, existingLine + ",{" + meal + ":" + ingredient + "}");
+                        dateExists = true;
+                        break;
                     }
                 }
             }

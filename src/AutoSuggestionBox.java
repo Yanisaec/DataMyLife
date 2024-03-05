@@ -77,6 +77,10 @@ public class AutoSuggestionBox extends JPanel{
             choiceList = CSVManagerCulture.getAllElements("Source");
         } else if (Type.equals("Media")) {
             choiceList = CSVManagerCulture.getAllElements("Media");
+        } else if (Type.equals("Workout")) {
+            choiceList = CSVManagerWorkout.getAllElements("Workout");
+        } else if (Type.equals("Exercise")) {
+            choiceList = CSVManagerWorkout.getAllElements("Exercise");
         }
         
         for(int i=0;i<choiceList.length;i++){
@@ -94,7 +98,11 @@ public class AutoSuggestionBox extends JPanel{
             subPanel.setBorder(BorderFactory.createTitledBorder("Medium Type"));
         } else if (Type.equals("Source")){
             subPanel.setBorder(BorderFactory.createTitledBorder("Source"));
-        }
+        } else if (Type.equals("Workout")){
+            subPanel.setBorder(BorderFactory.createTitledBorder("Workout"));
+        } else if (Type.equals("Exercise")){
+            subPanel.setBorder(BorderFactory.createTitledBorder("Exercise"));
+        } 
         subPanel.add(combo, BorderLayout.NORTH);
         // subPanel.add(clearButton, BorderLayout.CENTER); // Add clear button to the panel
         JPanel sub = new JPanel(new BorderLayout());
@@ -137,6 +145,22 @@ public class AutoSuggestionBox extends JPanel{
     public void loadSources() {
         vector.clear();
         choiceList = CSVManagerCulture.getAllElements("Media");
+        for(int i=0;i<choiceList.length;i++){
+            vector.addElement(choiceList[i]);
+        }
+    }
+
+    public void loadWorkouts() {
+        vector.clear();
+        choiceList = CSVManagerWorkout.getAllElements("Workout");
+        for(int i=0;i<choiceList.length;i++){
+            vector.addElement(choiceList[i]);
+        }
+    }
+
+    public void loadExercises() {
+        vector.clear();
+        choiceList = CSVManagerWorkout.getAllElements("Exercise");
         for(int i=0;i<choiceList.length;i++){
             vector.addElement(choiceList[i]);
         }
