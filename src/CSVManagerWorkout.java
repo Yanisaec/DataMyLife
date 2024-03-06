@@ -72,6 +72,60 @@ public class CSVManagerWorkout {
         return choiceList;
     }
 
+    public static void addWorkout(String newWorkout) {
+        String filePath = WORKOUTTYPES_CSV_PATH;
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            // Read the existing ingredients from the file
+            String line = reader.readLine();
+            List<String> existingChoices = new ArrayList<>(Arrays.asList(line.split(";")));
+
+            // Check if the new ingredient is already in the list
+            if (!existingChoices.contains(newWorkout)) {
+                // Add the new ingredient to the list
+                existingChoices.add(newWorkout);
+
+                // Write the updated list back to the file
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                    String updatedChoices = existingChoices.stream().collect(Collectors.joining(";"));
+                    writer.write(updatedChoices);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // Handle the exception appropriately (e.g., show an error message)
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately (e.g., show an error message)
+        }
+    }
+
+    public static void addExercise(String newExercise) {
+        String filePath = EXERCISES_CSV_PATH;
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            // Read the existing ingredients from the file
+            String line = reader.readLine();
+            List<String> existingChoices = new ArrayList<>(Arrays.asList(line.split(";")));
+
+            // Check if the new ingredient is already in the list
+            if (!existingChoices.contains(newExercise)) {
+                // Add the new ingredient to the list
+                existingChoices.add(newExercise);
+
+                // Write the updated list back to the file
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                    String updatedChoices = existingChoices.stream().collect(Collectors.joining(";"));
+                    writer.write(updatedChoices);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // Handle the exception appropriately (e.g., show an error message)
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately (e.g., show an error message)
+        }
+    }
+
     public static boolean isAWorkout(String workoutToTest) {
         try (BufferedReader workouts = CSVManagerWorkout.openCSVFile(WORKOUTTYPES_CSV_PATH)) {
             List<String> data = CSVManagerWorkout.readCSVFile(workouts);
@@ -152,6 +206,46 @@ public class CSVManagerWorkout {
                 e.printStackTrace();
                 // Handle the exception appropriately (e.g., show an error message)
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately (e.g., show an error message)
+        }
+    }
+
+    public static List<String[]> getLastWorkouts() {
+        String filePath = WORKOUTS_CSV_PATH;
+        List<String[]> result = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                
+                String[] parts = line.split(";");
+
+                if (parts.length > 0) {
+                    result.add(parts);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately (e.g., show an error message)
+        }
+
+        return result;
+    }
+
+    public static void deleteLinesWithDate(String targetDate) {
+        String filePath = WORKOUTS_CSV_PATH;
+        try {
+            // Read all lines from the file, filter out lines starting with the target date
+            // and collect the remaining lines
+            Path path = Path.of(filePath);
+            List<String> lines = Files.lines(path)
+                    .filter(line -> !line.startsWith(targetDate))
+                    .collect(Collectors.toList());
+
+            // Write the filtered lines back to the file
+            Files.write(path, lines);
         } catch (IOException e) {
             e.printStackTrace();
             // Handle the exception appropriately (e.g., show an error message)

@@ -215,52 +215,18 @@ public class CSVManagerCulture {
         }
     }
 
-        public static void deleteLinesWithDate(String targetDate) {
+    public static void deleteLinesWithDate(String targetDate) {
+        String filePath = CULTURE_CSV_PATH;
         try {
-            // Read all lines from the file
-            List<String> lines = Files.readAllLines(Paths.get(CULTURE_CSV_PATH));
+            // Read all lines from the file, filter out lines starting with the target date
+            // and collect the remaining lines
+            Path path = Path.of(filePath);
+            List<String> lines = Files.lines(path)
+                    .filter(line -> !line.startsWith(targetDate))
+                    .collect(Collectors.toList());
 
-            // Find the line containing the target date
-            String lineToRemove = lines.stream()
-                    .filter(line -> line.startsWith(targetDate))
-                    .findFirst()
-                    .orElse(null);
-
-            if (lineToRemove != null) {
-                // Extract and remove sources from the line
-                String[] lineElements = lineToRemove.split(";");
-                String source = lineElements[3];
-                deleteSource(source);
-
-                // Remove the line containing the target date from the "Eating.csv" file
-                lines.remove(lineToRemove);
-
-                // Write the updated lines back to the file
-                Files.write(Paths.get(CULTURE_CSV_PATH), lines);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Handle the exception appropriately (e.g., show an error message)
-        }
-    }
-
-    private static void deleteSource(String sourceToDelete) {
-        try {
-            // Read the single line from "Source.csv"
-            String sourceLine = Files.readString(Paths.get(SOURCE_CSV_PATH));
-
-            // Remove the specified source from the line
-            List<String> sources = List.of(sourceLine.split(";"));
-            sources = sources.stream()
-                .filter(source -> !source.equals(sourceToDelete))
-                .collect(Collectors.toList());
-            
-            String sourcesString = String.join(";", sources);
-
-            // Write the updated line back to "Source.csv"
-            Files.write(Paths.get(SOURCE_CSV_PATH), List.of(sourcesString));
-
+            // Write the filtered lines back to the file
+            Files.write(path, lines);
         } catch (IOException e) {
             e.printStackTrace();
             // Handle the exception appropriately (e.g., show an error message)

@@ -56,8 +56,7 @@ public class Workout extends JFrame {
         addWorkout.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String newWorkoutString= addWorkoutField.getText();
-                // CSVManagerWorkout.addWorkout(newWorkoutString);
+                addWorkout();
                 addWorkoutField.setText("");
             }
         });
@@ -69,8 +68,7 @@ public class Workout extends JFrame {
         addExercise.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String newExerciseString= addExerciseField.getText();
-                // CSVManagerWorkout.addExercise(newExerciseString);
+                addExercise();
                 addExerciseField.setText("");
             }
         });
@@ -110,12 +108,40 @@ public class Workout extends JFrame {
                     weightField.setText("");
                     repsField.setText("");
                     restField.setText("");
-                    // updateLastWorkouts();
+                    updateLastWorkouts();
                 } catch (CSVManagerWorkout.CustomException ex) {
                     JOptionPane.showMessageDialog(addToWorkouts, ex);
                 }   
             }
         });
+
+        // Create a JTextField for showing the last ten days
+        lastWorkoutsTextArea = new JTextArea(5,150);
+        lastWorkoutsTextArea.setEditable(false);
+        lastWorkoutsTextArea.setLineWrap(false);
+        lastWorkoutsTextArea.setWrapStyleWord(true);
+
+        // Create a JScrollPane and add the JTextArea to it
+        lastWorkoutsScrollPane = new JScrollPane(lastWorkoutsTextArea);
+        lastWorkoutsScrollPane.setPreferredSize(new Dimension(600, 100));
+
+        updateLastWorkouts();
+
+        deleteDateLabel = new JLabel("Date to delete from the file");
+        deleteDateTextField = new JTextField();
+        deleteDateTextField.setColumns(8);
+
+        deleteDateButton = new JButton("Delete");
+        deleteDateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String dateToDelete = deleteDateTextField.getText();
+                CSVManagerWorkout.deleteLinesWithDate(dateToDelete);
+                deleteDateTextField.setText("");
+                // updateLastMedia();
+            }
+        });
+        
 
         // Create a "Menu" button
         menuButton = new JButton("Menu");
@@ -159,6 +185,13 @@ public class Workout extends JFrame {
         horizontalBoxaddToWorkouts.add(addToWorkouts);
         horizontalBoxaddToWorkouts.add(Box.createHorizontalGlue());
 
+        JPanel lastWorkoutsPanel = new JPanel(new FlowLayout());
+        lastWorkoutsPanel.add(lastWorkoutsScrollPane);
+
+        JPanel deleteDatePanel = new JPanel(new FlowLayout());
+        deleteDatePanel.add(deleteDateLabel);
+        deleteDatePanel.add(deleteDateTextField);
+        deleteDatePanel.add(deleteDateButton);
 
         Box horizontalBoxMenuButton = Box.createHorizontalBox();
         horizontalBoxMenuButton.add(Box.createHorizontalGlue());
@@ -172,6 +205,8 @@ public class Workout extends JFrame {
         mainBox.add(workoutAndExercisePanel);
         mainBox.add(weightRepsRestPanel);
         mainBox.add(horizontalBoxaddToWorkouts);
+        mainBox.add(lastWorkoutsPanel);
+        mainBox.add(deleteDatePanel);
         mainBox.add(horizontalBoxMenuButton);
 
         add(mainBox);
@@ -199,5 +234,52 @@ public class Workout extends JFrame {
             // Handle the case where the input is empty
             JOptionPane.showMessageDialog(this, "Please fill all informations.");
         }
+    }
+
+    private void addWorkout() {
+        String newWorkoutString= addWorkoutField.getText();
+        if (!newWorkoutString.isEmpty()) {
+            CSVManagerWorkout.addWorkout(newWorkoutString);
+            // Optionally, update the AutoSuggestionBox with the new choices
+            workoutTypeSuggestionBox.loadWorkouts();
+        } else {
+            // Handle the case where the input is empty
+            JOptionPane.showMessageDialog(this, "Please enter a choice.");
+        }
+    }
+
+    private void addExercise() {
+        String newEcerciseString = addExerciseField.getText();
+        if (!newEcerciseString.isEmpty()) {
+            CSVManagerWorkout.addExercise(newEcerciseString);
+            // Optionally, update the AutoSuggestionBox with the new choices
+            exerciseTypeSuggestionBox.loadExercises();
+        } else {
+            // Handle the case where the input is empty
+            JOptionPane.showMessageDialog(this, "Please enter a choice.");
+        }
+    }
+
+    private void updateLastWorkouts() {
+        List<String[]> lastWorkouts = CSVManagerWorkout.getLastWorkouts();
+        lastWorkoutsTextArea.setText("");
+        String fullText = "";
+        for (int i = 0; i < lastWorkouts.size(); i++) {
+            String dateBadFormat = lastWorkouts.get(i)[0].toString();
+            DateTimeFormatter originalFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+            LocalDate datess = LocalDate.parse(dateBadFormat, originalFormatter);
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String formattedString = datess.format(outputFormatter);
+            String exercises = "";
+            String dayDateWorkout = "Date : " + formattedString + " || Workout : " + lastWorkouts.get(i)[1];
+            String[] dayExercises = lastWorkouts.get(i)[2].split(",");
+            for (int j = 0; j < dayExercises.length; j++) {
+                String[] exo = dayExercises[j].split(":");
+                exercises = exercises + " || " + exo[0].replace("{","")  + " : " + exo[1] + " x " + exo[2] +" o " + exo[3].replace("}","") + "s";
+            }
+            String day = dayDateWorkout + exercises;
+            fullText = fullText + day + "\n"; 
+        }
+        lastWorkoutsTextArea.setText(fullText);
     }
 }
