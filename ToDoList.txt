@@ -1,4 +1,5 @@
 Eating :
+    - add a button to see the ingredients
 
 Working : 
 

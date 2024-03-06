@@ -52,7 +52,7 @@ public class AutoSuggestionBox extends JPanel{
         }else if(code==KeyEvent.VK_RIGHT) {
                 for(int i=0;i<vector.size();i++) {
                     String str = vector.elementAt(i);
-                    if(str.startsWith(text)) {
+                    if(str.contains(text)) {
                         combo.setSelectedIndex(-1);
                         tf.setText(str);
                         return;
@@ -121,7 +121,7 @@ public class AutoSuggestionBox extends JPanel{
     private static DefaultComboBoxModel getSuggestedModel(java.util.List<String> list, String text) {
         DefaultComboBoxModel m = new DefaultComboBoxModel();
         for(String s: list) {
-            if(s.startsWith(text)) m.addElement(s);
+            if(s.contains(text)) m.addElement(s);
         }
         return m;
     }
