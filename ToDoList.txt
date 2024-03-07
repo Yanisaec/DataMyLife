@@ -1,7 +1,15 @@
 Eating :
-    - add a button to see the ingredients
+    - add a button to see the ingredients and their grades
 
-Working : 
+Working :
+    - AnalyzeWorkoutHabits :
+        * total number of workouts
+        * number of workouts per workout type
+        * total amount of weight lifted 
+        * chart with workouts per month
+        * exercises and the number of times I've done them and what is my current best rep
+        * evolution of a particular exercise : evolution of best rep / total weight lifted in a workout 
+
 
 Culture :
-    - grading system ? -> rank by favorite type of medium / media seen
+    - grading system ? -> rank by favorite type of medium / medium seen
