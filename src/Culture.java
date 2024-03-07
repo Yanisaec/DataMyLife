@@ -18,6 +18,8 @@ public class Culture extends JFrame {
 
     private JLabel mediumNameLabel;
     private JTextField mediumNameTextField;
+    private JLabel mediumGradeLabel;
+    private JTextField mediumGradeTextField;
     private AutoSuggestionBox mediumTypeSuggestionBox;
     private AutoSuggestionBox sourceNameSuggestionBox;
 
@@ -41,10 +43,10 @@ public class Culture extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Center the window on the screen
 
-        newMedium = new JLabel("Medium");
+        newMedium = new JLabel("New Medium Type");
         addMediumField = new JTextField();
-        addMediumField.setColumns(20);
-        addMedium = new JButton("Add medium");
+        addMediumField.setColumns(12);
+        addMedium = new JButton("Add Medium Type");
         addMedium.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -67,6 +69,9 @@ public class Culture extends JFrame {
         mediumNameLabel = new JLabel("Medium name");
         mediumNameTextField = new JTextField();
         mediumNameTextField.setColumns(20);
+        mediumGradeLabel = new JLabel("Medium grade (/20)");
+        mediumGradeTextField = new JTextField();
+        mediumGradeTextField.setColumns(2);
         mediumTypeSuggestionBox = new AutoSuggestionBox("Media");
         sourceNameSuggestionBox = new AutoSuggestionBox("Source");
 
@@ -79,6 +84,7 @@ public class Culture extends JFrame {
                     mediumTypeSuggestionBox.setText("");
                     sourceNameSuggestionBox.setText("");
                     mediumNameTextField.setText("");
+                    mediumGradeTextField.setText("");
                     updateLastMedia();
                 } catch (CSVManagerCulture.CustomException ex) {
                     JOptionPane.showMessageDialog(addToCulture, ex);
@@ -94,7 +100,7 @@ public class Culture extends JFrame {
 
         // Create a JScrollPane and add the JTextArea to it
         lastMediaScrollPane = new JScrollPane(lastMediaTextArea);
-        lastMediaScrollPane.setPreferredSize(new Dimension(500, 100));
+        lastMediaScrollPane.setPreferredSize(new Dimension(600, 100));
 
         updateLastMedia();
 
@@ -144,6 +150,8 @@ public class Culture extends JFrame {
         JPanel mediumName = new JPanel(new FlowLayout());
         mediumName.add(mediumNameLabel);
         mediumName.add(mediumNameTextField);
+        mediumName.add(mediumGradeLabel);
+        mediumName.add(mediumGradeTextField);
 
         JPanel mediumAndSourcePanel = new JPanel(new FlowLayout());
         mediumAndSourcePanel.add(mediumTypeSuggestionBox);
@@ -203,8 +211,9 @@ public class Culture extends JFrame {
         String source = sourceNameSuggestionBox.getText();
         String name = mediumNameTextField.getText();
         String date = dateBar.getText();
-        if (!date.equals("") && !source.equals("") && !name.equals("") && !medium.equals("")) {
-            CSVManagerCulture.addToCulture(date, medium, name, source);
+        String grade = mediumGradeTextField.getText();
+        if (!date.equals("") && !source.equals("") && !name.equals("") && !medium.equals("") && !grade.equals("")) {
+            CSVManagerCulture.addToCulture(date, medium, name, source, grade);
             // Optionally, update the AutoSuggestionBox with the new choices
             sourceNameSuggestionBox.loadSources();
             // updateLast10Days();
@@ -224,7 +233,7 @@ public class Culture extends JFrame {
             LocalDate datess = LocalDate.parse(dateBadFormat, originalFormatter);
             DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             String formattedString = datess.format(outputFormatter);
-            String day = "Date : " + formattedString + " || Name : " + lastMedia.get(i)[2].toString().replaceAll("\\[|\\]","") + " || Source : " + lastMedia.get(i)[3].toString().replaceAll("\\[|\\]","") + " || Medium : " + lastMedia.get(i)[1].toString().replaceAll("\\[|\\]","");
+            String day = "Date : " + formattedString + " || Name : " + lastMedia.get(i)[2].toString().replaceAll("\\[|\\]","") + " || Grade : " + lastMedia.get(i)[3].toString().replaceAll("\\[|\\]","") + " / 20" + " || Source : " + lastMedia.get(i)[4].toString().replaceAll("\\[|\\]","") + " || Medium : " + lastMedia.get(i)[1].toString().replaceAll("\\[|\\]","");
             fullText = fullText + day + "\n"; 
         }
         lastMediaTextArea.setText(fullText);

@@ -9,8 +9,9 @@ import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-
-public class Eating extends JFrame {    
+public class Eating extends JFrame {  
+    private JButton seeIngredients;
+  
     private JButton newIngredient;
     private JTextField newChoiceTextField;
     private JLabel gradeLabel;
@@ -71,6 +72,14 @@ public class Eating extends JFrame {
         newChoice = new JLabel("Ingredient to add");
 
         dateLabel = new JLabel("Date (daymonthyear)");
+
+        seeIngredients = new JButton("See Ingredients");
+        seeIngredients.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new IngredientsWindow();
+            }
+        });
 
         LocalDate currentDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
@@ -176,6 +185,11 @@ public class Eating extends JFrame {
         horizontalBoxAddIngredientButton.add(newIngredient);
         horizontalBoxAddIngredientButton.add(Box.createHorizontalGlue());
 
+        Box horizontalBoxSeeIngredientsButton = Box.createHorizontalBox();
+        horizontalBoxSeeIngredientsButton.add(Box.createHorizontalGlue());
+        horizontalBoxSeeIngredientsButton.add(seeIngredients);
+        horizontalBoxSeeIngredientsButton.add(Box.createHorizontalGlue());
+
         Box horizontalMoreInfoButton = Box.createHorizontalBox();
         horizontalMoreInfoButton.add(Box.createHorizontalGlue());
         horizontalMoreInfoButton.add(moreInfoButton);
@@ -185,6 +199,7 @@ public class Eating extends JFrame {
         lastDaysPanel.add(lastDayScrollPane);
 
         // Add components to the verticalBox
+        mainBox.add(horizontalBoxSeeIngredientsButton);
         mainBox.add(newIngredPanel);
         mainBox.add(horizontalBoxAddIngredientButton);
         mainBox.add(Box.createVerticalStrut(20)); // Add some vertical spacing

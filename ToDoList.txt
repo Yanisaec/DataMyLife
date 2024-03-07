@@ -1,5 +1,4 @@
 Eating :
-    - add a button to see the ingredients and their grades
 
 Working :
     - AnalyzeWorkoutHabits :

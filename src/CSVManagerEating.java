@@ -529,4 +529,30 @@ public class CSVManagerEating {
             super(message);
         }
     }
+
+    public static String[][] getIngredientsAndGrades() {
+        List<String[]> result = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(INGREDIENTS_CSV_PATH))) {
+            String line = reader.readLine();
+
+            if (line != null) {
+                String[] ingredientGrades = line.split(";");
+                for (String ingredientGrade : ingredientGrades) {
+                    String ingredient = ingredientGrade.substring(0,ingredientGrade.length() - 1);
+                    String grade = String.valueOf(ingredientGrade.charAt(ingredientGrade.length() - 1));
+                    result.add(new String[]{ingredient, grade});
+                    
+                }
+            }
+
+            result.sort(Comparator.comparing(entry -> entry[0]));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately (e.g., show an error message)
+        }
+
+        return result.toArray(new String[0][]);
+    }
 }

@@ -144,7 +144,7 @@ public class AutoSuggestionBox extends JPanel{
 
     public void loadSources() {
         vector.clear();
-        choiceList = CSVManagerCulture.getAllElements("Media");
+        choiceList = CSVManagerCulture.getAllElements("Source");
         for(int i=0;i<choiceList.length;i++){
             vector.addElement(choiceList[i]);
         }

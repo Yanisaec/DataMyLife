@@ -9,6 +9,9 @@ import java.time.format.DateTimeFormatter;
 
 
 public class Workout extends JFrame {
+
+    private JButton seeExercises;
+
     private JButton addWorkout;
     private JTextField addWorkoutField;
     private JLabel newWorkoutLabel;
@@ -48,6 +51,14 @@ public class Workout extends JFrame {
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Center the window on the screen
+
+        seeExercises = new JButton("See Exercises");
+        seeExercises.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new ExercisesWindow();
+            }
+        });
 
         newWorkoutLabel = new JLabel("Workout type");
         addWorkoutField = new JTextField();
@@ -154,6 +165,11 @@ public class Workout extends JFrame {
 
         // SET EVERYTHING IN THE WINDOW //
 
+        Box horizontalBoxSeeExercicesButton = Box.createHorizontalBox();
+        horizontalBoxSeeExercicesButton.add(Box.createHorizontalGlue());
+        horizontalBoxSeeExercicesButton.add(seeExercises);
+        horizontalBoxSeeExercicesButton.add(Box.createHorizontalGlue());
+
         JPanel newWorkoutJPanel = new JPanel(new FlowLayout());
         newWorkoutJPanel.add(newWorkoutLabel);
         newWorkoutJPanel.add(addWorkoutField);
@@ -199,6 +215,7 @@ public class Workout extends JFrame {
         horizontalBoxMenuButton.add(Box.createHorizontalGlue());
 
         Box mainBox = Box.createVerticalBox();
+        mainBox.add(horizontalBoxSeeExercicesButton);
         mainBox.add(newWorkoutJPanel);
         mainBox.add(newExerciseJPanel);
         mainBox.add(datePanel);

@@ -152,7 +152,7 @@ public class CSVManagerCulture {
         }
     }
 
-    public static void addToCulture(String date, String medium, String name, String source) throws CustomException{
+    public static void addToCulture(String date, String medium, String name, String source, String grade) throws CustomException{
         String filePath = CULTURE_CSV_PATH;
         if (!date.matches("\\d{8}")) {
             throw new CustomException("The date isn't in the right format.");
@@ -178,7 +178,7 @@ public class CSVManagerCulture {
                 String existingLine = lines.get(i);
                 String[] parts = existingLine.split(";");
                 if (parts.length > 0 && parts[0].equals(date)) {
-                    if (!existingLine.contains(date + ";" + medium + ";" + name + ";" + source)) {
+                    if (!existingLine.contains(date + ";" + medium + ";" + name + ";" + grade + ";" + source)) {
                     // Line with the date already exists, do nothing
                     dateExists = true;
                     break;
@@ -188,7 +188,7 @@ public class CSVManagerCulture {
 
             // If the date doesn't exist, create a new line
             if (!dateExists) {
-                String newLine = date + ";" + medium + ";" + name + ";" + source;
+                String newLine = date + ";" + medium + ";" + name + ";" + grade + ";" + source;
                 lines.add(newLine);
                 addSource(source);
             }
@@ -292,5 +292,27 @@ public class CSVManagerCulture {
         }
 
         return result;
+    }
+
+    public static String[][] getMediaAndGrades() {
+        List<String[]> resultList = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(CULTURE_CSV_PATH))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(";");
+                if (parts.length >= 4) {
+                    String mediaName = parts[2];
+                    String grade = parts[3];
+
+                    resultList.add(new String[]{mediaName, grade});
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately (e.g., show an error message)
+        }
+
+        return resultList.toArray(new String[0][0]);
     }
 }
