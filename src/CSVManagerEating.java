@@ -217,7 +217,7 @@ public class CSVManagerEating {
                 ArrayList<String> soirList = new ArrayList<String>();
                 ArrayList<String> snackList = new ArrayList<String>();
                 ArrayList<String> matinList = new ArrayList<String>();
-                if (parts.length > 0) {
+                if (parts.length > 1) {
                     String date = parts[0];
                     String[] couples = parts[1].split(",");
                     // Iterate over the remaining parts to extract meals and ingredients
@@ -352,7 +352,7 @@ public class CSVManagerEating {
             while ((line = reader.readLine()) != null) {
                 
                 String[] parts = line.split(";");
-                if (parts.length > 0) {
+                if (parts.length > 1) {
                     String[] couples = parts[1].split(",");
                     // Iterate over the remaining parts to extract occurences of ingredients grades
                     for (int i = 0; i < couples.length; i++) {

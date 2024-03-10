@@ -115,7 +115,6 @@ public class Eating extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     addToFile();
-                    ingredientBox.setText("");
                 } catch (CSVManagerEating.CustomException ex) {
                     JOptionPane.showMessageDialog(addToFile, ex);
                 }
@@ -247,6 +246,7 @@ public class Eating extends JFrame {
         String date = dateBar.getText();
         if (!date.equals("") && !ingredient.equals("") && !meal.equals("")) {
             CSVManagerEating.addToFile(date, meal, ingredient);
+            ingredientBox.setText("");
             // Optionally, update the AutoSuggestionBox with the new choices
             ingredientBox.loadIngredients();
             updateLastDays();

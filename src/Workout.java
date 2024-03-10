@@ -115,10 +115,6 @@ public class Workout extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     addToWorkouts();
-                    exerciseTypeSuggestionBox.setText("");
-                    weightField.setText("");
-                    repsField.setText("");
-                    restField.setText("");
                     updateLastWorkouts();
                 } catch (CSVManagerWorkout.CustomException ex) {
                     JOptionPane.showMessageDialog(addToWorkouts, ex);
@@ -150,6 +146,14 @@ public class Workout extends JFrame {
                 CSVManagerWorkout.deleteLinesWithDate(dateToDelete);
                 deleteDateTextField.setText("");
                 // updateLastMedia();
+            }
+        });
+
+        moreInfoButton = new JButton("Analyze workout habits");
+        moreInfoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openMoreInfoWindow();
             }
         });
         
@@ -209,6 +213,11 @@ public class Workout extends JFrame {
         deleteDatePanel.add(deleteDateTextField);
         deleteDatePanel.add(deleteDateButton);
 
+        Box horizontalMoreInfoButton = Box.createHorizontalBox();
+        horizontalMoreInfoButton.add(Box.createHorizontalGlue());
+        horizontalMoreInfoButton.add(moreInfoButton);
+        horizontalMoreInfoButton.add(Box.createHorizontalGlue());
+
         Box horizontalBoxMenuButton = Box.createHorizontalBox();
         horizontalBoxMenuButton.add(Box.createHorizontalGlue());
         horizontalBoxMenuButton.add(menuButton);
@@ -224,6 +233,8 @@ public class Workout extends JFrame {
         mainBox.add(horizontalBoxaddToWorkouts);
         mainBox.add(lastWorkoutsPanel);
         mainBox.add(deleteDatePanel);
+        mainBox.add(horizontalMoreInfoButton);
+        mainBox.add(Box.createVerticalStrut(25)); // Add some vertical spacing
         mainBox.add(horizontalBoxMenuButton);
 
         add(mainBox);
@@ -245,6 +256,10 @@ public class Workout extends JFrame {
         String date = dateBar.getText();
         if (!date.equals("") && !workout.equals("") && !weight.equals("") && !exercise.equals("") && !reps.equals("") && !rest.equals("")) {
             CSVManagerWorkout.addToWorkouts(date, workout, exercise, weight, reps, rest);
+            exerciseTypeSuggestionBox.setText("");
+            weightField.setText("");
+            repsField.setText("");
+            restField.setText("");
             // Optionally, update the AutoSuggestionBox with the new choices
             // sourceNameSuggestionBox.loadSources();
         } else {
@@ -299,4 +314,9 @@ public class Workout extends JFrame {
         }
         lastWorkoutsTextArea.setText(fullText);
     }
+
+    private void openMoreInfoWindow() {
+        new AnalyzeWorkoutHabits();
+    }
+
 }

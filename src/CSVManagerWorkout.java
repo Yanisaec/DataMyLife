@@ -18,6 +18,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CSVManagerWorkout {
+    private static Map<String, Integer> workoutsOccurences = new HashMap<>();
+    private static Map<String, Integer> workoutsPerMonths = new HashMap<>();
+    private static Map<String, Integer> exercisesOccurences = new HashMap<>();
+    private static Map<String, Float> weightLiftedPerExercise = new HashMap<>();
+    private static Map<String, Float> maxWeightPerExercise = new HashMap<>();
+    private static Map<String, Float> bestTotalWeightPerExercise = new HashMap<>();
+    private static Map<String, Float> bestTotalWeightPerOneSetExercise = new HashMap<>();
+    private static int nbOfWorkouts;
+    private static float totalWeightLifted;
+    private static float totalRest;
     private static List<String> exercisesList = new ArrayList<>();
     private static List<String> workoutTypesList = new ArrayList<>();
     private static final String WORKOUTS_CSV_PATH = "C:/Users/boite/Desktop/DataMyLife/Indexes/Workouts.csv";
@@ -256,5 +266,173 @@ public class CSVManagerWorkout {
         public CustomException(String message) {
             super(message);
         }
+    }
+
+    public static void updateData() {
+        workoutsOccurences = new HashMap<>();
+        workoutsPerMonths = new HashMap<>();
+        exercisesOccurences = new HashMap<>();
+        weightLiftedPerExercise = new HashMap<>();
+        maxWeightPerExercise = new HashMap<>();
+        bestTotalWeightPerExercise = new HashMap<>();
+        bestTotalWeightPerOneSetExercise = new HashMap<>();
+        nbOfWorkouts = 0;
+        totalWeightLifted = 0;
+        totalRest = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(WORKOUTS_CSV_PATH))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // System.out.println("1");
+                String[] parts = line.split(";");
+                if (parts.length > 1) {
+                    // System.out.println("2");
+                    nbOfWorkouts += 1;
+                    String date = parts[0];
+                    String monthYear = date.substring(2, date.length());
+                    workoutsPerMonths.put(monthYear, workoutsPerMonths.getOrDefault(monthYear, 0) + 1);
+                    String workout = parts[1];
+                    workoutsOccurences.put(workout, workoutsOccurences.getOrDefault(workout, 0) + 1);
+                    String[] couples = parts[2].replaceAll("[{}]", "").split(",");
+                    for (String couple : couples) {
+                        // System.out.println("3");
+                        String[] exerciseInfos = couple.split(":");
+                        if (exerciseInfos.length == 4) {
+                            String exerciseName = exerciseInfos[0];
+                            String weight = exerciseInfos[1];
+                            String reps = exerciseInfos[2];
+                            String rest = exerciseInfos[3];
+                            
+                            float weightLifted = sumWeight(weight, reps);
+
+                            float bestSet = findBestSet(weight, reps);
+
+                            totalRest += Integer.parseInt(rest);
+
+                            totalWeightLifted += weightLifted;
+
+                            exercisesOccurences.put(exerciseName, exercisesOccurences.getOrDefault(exerciseName, 0) + 1);
+
+                            weightLiftedPerExercise.put(exerciseName, weightLiftedPerExercise.getOrDefault(exerciseName, 0f) + weightLifted);
+
+                            if (Float.parseFloat(weight) > maxWeightPerExercise.getOrDefault(exerciseName, 0f) ) {
+                                maxWeightPerExercise.put(exerciseName, Float.parseFloat(weight));
+                            }
+
+                            if (weightLifted > bestTotalWeightPerExercise.getOrDefault(exerciseName, 0f)) {
+                                bestTotalWeightPerExercise.put(exerciseName, weightLifted);
+                            }
+
+                            if (bestSet > bestTotalWeightPerOneSetExercise.getOrDefault(exerciseName, 0f)) {
+                                bestTotalWeightPerOneSetExercise.put(exerciseName, bestSet);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately (e.g., show an error message)
+        }
+
+        // Convert the map to a String array
+    }
+
+    private static String[][] convertMapToArray(Map<String, Integer> map) {
+        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(map.entrySet());
+
+        // Sort the entries by decreasing occurrences
+        entryList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+        // Convert the sorted entries to a two-dimensional array
+        String[][] result = new String[entryList.size()][2]; // Each entry contributes two elements (ingredient and count)
+        int index = 0;
+
+        for (Map.Entry<String, Integer> entry : entryList) {
+            result[index][0] = entry.getKey(); // Ingredient name
+            result[index][1] = String.valueOf(entry.getValue()); // Occurrence count as String
+            index++;
+        }
+        return result;
+    }
+
+    private static String[][] convertMapToArrayFloat(Map<String, Float> map) {
+        List<Map.Entry<String, Float>> entryList = new ArrayList<>(map.entrySet());
+
+        // Sort the entries by decreasing occurrences
+        entryList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+        // Convert the sorted entries to a two-dimensional array
+        String[][] result = new String[entryList.size()][2]; // Each entry contributes two elements (ingredient and count)
+        int index = 0;
+
+        for (Map.Entry<String, Float> entry : entryList) {
+            result[index][0] = entry.getKey(); // Ingredient name
+            result[index][1] = String.valueOf(entry.getValue()); // Occurrence count as String
+            index++;
+        }
+        return result;
+    }
+
+    private static float sumWeight(String weight, String reps) {
+        float totalWeight = 0;
+        String[] subReps = reps.split("_");
+        float weightInt = Float.parseFloat(weight);
+
+        for (String s : subReps) {
+            totalWeight += weightInt * Float.parseFloat(s);
+        }
+
+        return totalWeight;
+    }
+
+    private static float findBestSet(String weight, String reps) {
+        Float weightFloat = Float.parseFloat(weight);
+        float bestWeight = 0;
+        String[] subReps = reps.split("_");
+
+        for (String s : subReps) {
+            Float weightSet = weightFloat * Float.parseFloat(s);
+            if (weightSet > bestWeight) {
+                bestWeight = weightSet;
+            }
+        }
+
+        return bestWeight;
+    }
+
+    public static int getNbOfWorkouts() {
+        return nbOfWorkouts;
+    }
+
+    public static float getTotalRest() {
+        return totalRest;
+    }
+
+    public static float getTotalWeight() {
+        return totalWeightLifted;
+    }
+
+    public static String[][] getWorkoutsPerMonths() {
+        return convertMapToArray(workoutsPerMonths);
+    }
+
+    public static String[][] getExercisesOccurences() {
+        return convertMapToArray(exercisesOccurences);
+    }
+
+    public static String[][] getweightLiftedPerExercise() {
+        return convertMapToArrayFloat(weightLiftedPerExercise);
+    }
+
+    public static String[][] getmaxWeightPerExercise() {
+        return convertMapToArrayFloat(maxWeightPerExercise);
+    }
+
+    public static String[][] getbestTotalWeightPerExercise() {
+        return convertMapToArrayFloat(bestTotalWeightPerExercise);
+    }
+    
+    public static String[][] getbestTotalWeightPerOneSetExercise() {
+        return convertMapToArrayFloat(bestTotalWeightPerOneSetExercise);
     }
 }

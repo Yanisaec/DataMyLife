@@ -81,10 +81,6 @@ public class Culture extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     addToCulture();
-                    mediumTypeSuggestionBox.setText("");
-                    sourceNameSuggestionBox.setText("");
-                    mediumNameTextField.setText("");
-                    mediumGradeTextField.setText("");
                     updateLastMedia();
                 } catch (CSVManagerCulture.CustomException ex) {
                     JOptionPane.showMessageDialog(addToCulture, ex);
@@ -213,6 +209,10 @@ public class Culture extends JFrame {
         String date = dateBar.getText();
         String grade = mediumGradeTextField.getText();
         if (!date.equals("") && !source.equals("") && !name.equals("") && !medium.equals("") && !grade.equals("")) {
+            mediumTypeSuggestionBox.setText("");
+            sourceNameSuggestionBox.setText("");
+            mediumNameTextField.setText("");
+            mediumGradeTextField.setText("");
             CSVManagerCulture.addToCulture(date, medium, name, source, grade);
             // Optionally, update the AutoSuggestionBox with the new choices
             sourceNameSuggestionBox.loadSources();
