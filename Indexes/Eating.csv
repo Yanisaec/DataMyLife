@@ -11,3 +11,6 @@
 07032024;{snack:chocolat 100%},{midi:pates},{midi:sauce tomate},{midi:poulet},{midi:pain},{midi:fromage},{midi:fromage rape},{midi:pomme},{snack:monster},{soir:frites},{soir:burger poulet fast food},{soir:sauce piquante}
 08032024;{midi:pates},{midi:sauce tomate},{midi:fromage},{midi:fromage rape},{midi:poulet},{midi:pomme},{snack:chocolat 100%}
 09032024;{midi:pates},{midi:sauce tomate},{midi:fromage},{midi:poulet},{midi:pomme},{soir:fromage},{soir:charcuterie},{soir:beignet aux fruits},{soir:biere},{soir:pomme de terre}
+10032024;{midi:pates},{midi:sauce tomate},{midi:fromage},{midi:pomme},{midi:poulet},{soir:pates},{soir:sauce tomate},{soir:fromage},{soir:oeufs}
+11032024;{snack:pain},{midi:pates},{midi:pain},{midi:poulet},{midi:sauce tomate},{midi:fromage},{midi:pomme},{midi:pate de porc},{soir:pain},{soir:pates},{soir:pate de porc},{soir:sauce tomate},{soir:fromage},{soir:pomme},{soir:oeufs}
+12032024;{midi:sandwich saumon fume},{midi:fougasse aux olives}
