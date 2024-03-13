@@ -13,4 +13,5 @@
 09032024;{midi:pates},{midi:sauce tomate},{midi:fromage},{midi:poulet},{midi:pomme},{soir:fromage},{soir:charcuterie},{soir:beignet aux fruits},{soir:biere},{soir:pomme de terre}
 10032024;{midi:pates},{midi:sauce tomate},{midi:fromage},{midi:pomme},{midi:poulet},{soir:pates},{soir:sauce tomate},{soir:fromage},{soir:oeufs}
 11032024;{snack:pain},{midi:pates},{midi:pain},{midi:poulet},{midi:sauce tomate},{midi:fromage},{midi:pomme},{midi:pate de porc},{soir:pain},{soir:pates},{soir:pate de porc},{soir:sauce tomate},{soir:fromage},{soir:pomme},{soir:oeufs}
-12032024;{midi:sandwich saumon fume},{midi:fougasse aux olives}
+12032024;{midi:sandwich saumon fume},{midi:fougasse aux olives},{soir:poireaux},{soir:fromage},{soir:pate de porc},{soir:poulet},{soir:sauce tomate},{soir:pain},{soir:pomme}
+13032024;{soir:poireaux},{soir:sauce tomate},{soir:poulet},{soir:pomme},{midi:poulet},{midi:poireaux},{midi:sauce tomate},{midi:pomme}
